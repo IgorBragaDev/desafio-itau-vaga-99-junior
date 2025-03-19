@@ -5,7 +5,6 @@ import com.example.DesafioItau.models.Transaction;
 import com.example.DesafioItau.service.TransactionService;
 import jakarta.validation.Valid;
 
-import java.util.List;
 import com.example.DesafioItau.dtos.statisticsDTO;
 
 import org.springframework.http.HttpStatus;

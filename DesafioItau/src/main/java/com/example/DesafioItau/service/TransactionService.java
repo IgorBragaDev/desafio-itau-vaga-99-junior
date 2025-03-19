@@ -12,10 +12,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Service
 public class TransactionService {
     private final List<Transaction> transactions = new ArrayList<>();
-    
+    private static final Logger logger = LoggerFactory.getLogger(TransactionService.class);
 
     public Transaction createTransaction(Transaction transaction) {
         transactions.add(transaction);
@@ -28,11 +31,28 @@ public class TransactionService {
     }
 
     public statisticsDTO getStatistics() {
-        // Calcula estatísticas usando todas as transações armazenadas
-        DoubleSummaryStatistics stats = transactions.stream()
+        OffsetDateTime now = OffsetDateTime.now();
+        OffsetDateTime oneMinuteAgo = now.minusSeconds(60);
+
+        logger.info("Calculando estatísticas para transações entre {} e {}", oneMinuteAgo, now);
+
+        // Filtra transações dos últimos 60 segundos
+        List<Transaction> recentTransactions = transactions.stream()
+                .filter(t -> {
+                    boolean isInInterval = !t.getDataHora().isBefore(oneMinuteAgo) && !t.getDataHora().isAfter(now);
+                    logger.info("Transação: {}, Dentro do intervalo: {}", t, isInInterval);
+                    return isInInterval;
+                })
+                .collect(Collectors.toList());
+
+        // Calcula estatísticas usando DoubleSummaryStatistics
+        DoubleSummaryStatistics stats = recentTransactions.stream()
                 .mapToDouble(Transaction::getValor)
                 .summaryStatistics();
-    
+
+        logger.info("Estatísticas calculadas: count={}, sum={}, avg={}, min={}, max={}",
+                stats.getCount(), stats.getSum(), stats.getAverage(), stats.getMin(), stats.getMax());
+
         // Retorna o DTO com os valores calculados
         return new statisticsDTO(
                 stats.getCount(),
