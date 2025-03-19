@@ -2,11 +2,11 @@ package com.example.DesafioItau.dtos;
 
 public class statisticsDTO {
 
-    private long count; // Quantidade de transações
-    private double sum; // Soma total dos valores
-    private double avg; // Média dos valores
-    private double min; // Menor valor
-    private double max; // Maior valor
+    private long count; 
+    private double sum; 
+    private double avg; 
+    private double min; 
+    private double max; 
 
     // Construtor padrão
     public statisticsDTO() {}

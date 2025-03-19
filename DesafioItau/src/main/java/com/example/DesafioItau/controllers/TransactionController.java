@@ -7,6 +7,8 @@ import jakarta.validation.Valid;
 
 import com.example.DesafioItau.dtos.statisticsDTO;
 
+import java.time.OffsetDateTime;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +28,7 @@ public class TransactionController {
 
         Transaction transaction = new Transaction();
         transaction.setValor(transactionDTO.getValor());
-        transaction.setDataHora(transactionDTO.getDataHora());
+        transaction.setDataHora(OffsetDateTime.now());
 
         Transaction createdTransaction = transactionService.createTransaction(transaction);
         return new ResponseEntity<>(createdTransaction, HttpStatus.CREATED);
